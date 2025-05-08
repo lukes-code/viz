@@ -163,7 +163,12 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
 
   return (
     <div className="h-[1000px] bg-white rounded-xl shadow">
-      <ReactFlow nodes={nodes} edges={edges} fitView>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        fitView
+        proOptions={{ hideAttribution: true }}
+      >
         <Background />
         <Controls />
         <MiniMap />
