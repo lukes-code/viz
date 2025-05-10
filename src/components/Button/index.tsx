@@ -23,10 +23,10 @@ const Button = (props: Props) => {
       buttonStyles = "bg-blue-500 text-white hover:bg-blue-600";
       break;
     case ButtonType.SECONDARY:
-      buttonStyles = "bg-white text-gray-900 hover:bg-gray-600";
+      buttonStyles = "bg-white text-gray-900 hover:bg-gray-300";
       break;
     case ButtonType.DANGER:
-      buttonStyles = "bg-red-500 text-white hover:bg-red-600";
+      buttonStyles = "bg-red-500 text-white hover:bg-red-300";
       break;
     default:
       buttonStyles = "bg-blue-500 text-white hover:bg-blue-600";

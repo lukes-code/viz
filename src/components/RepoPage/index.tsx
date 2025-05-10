@@ -4,6 +4,7 @@ import { ButtonType, FlowData, Stage } from "../../types";
 import ConfirmModal from "../ConfirmModal";
 import { coreTechList, flowTemplates } from "../../constants";
 import Button from "../Button";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 type CustomTypes = {
   [key: string]: {
@@ -185,6 +186,9 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
             placeholder="Flow name"
           />
 
+          <h3 className="text-xl font-semibold text-purple-400 my-2">
+            Quick start template
+          </h3>
           <select
             value={templateSelect}
             onChange={(e) => handleTemplateSelect(e.target.value)}
@@ -200,7 +204,9 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-purple-400">Core Tech</h3>
+          <h3 className="text-xl font-semibold text-purple-400 my-2">
+            Core Tech
+          </h3>
           <select
             value={coreTech}
             onChange={(e) =>
@@ -220,7 +226,9 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-purple-400">Description</h3>
+          <h3 className="text-xl font-semibold text-purple-400 my-2">
+            Description
+          </h3>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -229,90 +237,127 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
           />
         </div>
 
+        <h3 className="text-xl font-semibold text-purple-400 my-2">Stages</h3>
         {groupedStages.map((step, stepIndex) => (
-          <div
-            key={stepIndex}
-            className="mb-8 p-6 rounded-xl bg-white/5 backdrop-blur border border-white/10 shadow-inner"
-          >
-            <h3 className="text-lg font-semibold text-purple-400 mb-4">
-              Stage {stepIndex + 1}
-            </h3>
+          <div key={stepIndex} className="flex flex-col items-center">
+            <div className="w-full">
+              <div className="p-6 rounded-xl bg-white/5 backdrop-blur border border-white/10 shadow-inner">
+                <h3 className="text-lg font-semibold text-purple-400 mb-4">
+                  Stage {stepIndex + 1}
+                </h3>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              {step.map((stage) => {
-                const globalIndex = stages.findIndex((s) => s === stage);
+                <div className="grid md:grid-cols-2 gap-4">
+                  {step.map((stage) => {
+                    const globalIndex = stages.findIndex((s) => s === stage);
 
-                return (
-                  <div
-                    key={globalIndex}
-                    className="p-4 bg-gray-800 rounded-lg border border-gray-700 shadow-sm"
-                  >
-                    <div className="mb-2">
-                      <input
-                        value={stage.name}
-                        onChange={(e) =>
-                          handleStageChange(globalIndex, "name", e.target.value)
-                        }
-                        className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
-                        placeholder="Stage name"
-                      />
-                    </div>
-
-                    <div className="mb-2">
-                      <select
-                        value={stage.label}
-                        onChange={(e) => {
-                          const selectedLabel = e.target.value;
-                          const foundEntry = Object.entries(customTypes).find(
-                            ([, val]) => val.label === selectedLabel
-                          );
-
-                          if (foundEntry) {
-                            const [, config] = foundEntry;
-                            updateStageAt(globalIndex, {
-                              label: config.label,
-                              color: config.color,
-                            });
-                          }
-                        }}
-                        className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
+                    return (
+                      <div
+                        key={globalIndex}
+                        className="p-4 bg-gray-800 rounded-lg border border-gray-700 shadow-sm"
                       >
-                        <option value="">Select type</option>
-                        {Object.entries(customTypes).map(([key, config]) => (
-                          <option key={key} value={config.label}>
-                            {config.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                        <div className="mb-2">
+                          <input
+                            value={stage.name}
+                            onChange={(e) =>
+                              handleStageChange(
+                                globalIndex,
+                                "name",
+                                e.target.value
+                              )
+                            }
+                            className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
+                            placeholder="Stage name"
+                          />
+                        </div>
 
-                    <label className="flex items-center text-sm text-gray-300">
-                      <input
-                        type="checkbox"
-                        checked={stage.isJoin}
-                        onChange={(e) =>
-                          handleStageChange(
-                            globalIndex,
-                            "isJoin",
-                            e.target.checked
-                          )
-                        }
-                        className="mr-2"
-                      />
-                      Join next step
-                    </label>
+                        <div className="mb-2">
+                          <select
+                            value={stage.label}
+                            onChange={(e) => {
+                              const selectedLabel = e.target.value;
+                              const foundEntry = Object.entries(
+                                customTypes
+                              ).find(([, val]) => val.label === selectedLabel);
 
-                    <Button
-                      onClick={() => handleRemoveStage(globalIndex)}
-                      disabled={stages.length === 1}
-                      type={ButtonType.DANGER}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                );
-              })}
+                              if (foundEntry) {
+                                const [, config] = foundEntry;
+                                updateStageAt(globalIndex, {
+                                  label: config.label,
+                                  color: config.color,
+                                });
+                              }
+                            }}
+                            className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
+                          >
+                            <option value="">Select type</option>
+                            {Object.entries(customTypes).map(
+                              ([key, config]) => (
+                                <option key={key} value={config.label}>
+                                  {config.label}
+                                </option>
+                              )
+                            )}
+                          </select>
+                        </div>
+
+                        <label className="flex items-center text-sm text-gray-300 mb-2">
+                          <input
+                            type="checkbox"
+                            checked={stage.isJoin}
+                            onChange={(e) =>
+                              handleStageChange(
+                                globalIndex,
+                                "isJoin",
+                                e.target.checked
+                              )
+                            }
+                            className="mr-2"
+                          />
+                          Does this run in parallel to the next item?
+                        </label>
+
+                        <button
+                          onClick={() => handleRemoveStage(globalIndex)}
+                          disabled={stages.length === 1}
+                          title="Delete"
+                          className="text-red-500 hover:text-red-400 cursor-pointer float-right"
+                        >
+                          <TrashIcon className="w-5 h-5" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
+
+            {/* Connector between groups */}
+            {stepIndex < groupedStages.length - 1 ? (
+              <div className="flex flex-col items-center my-2">
+                <svg
+                  className="w-4 h-12 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  {/* Vertical line (longer) */}
+                  <path
+                    d="M12 2v30"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  {/* Downward arrow */}
+                  <path
+                    d="M19 26l-7 7-7-7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-400 mt-6">Finish</div>
+            )}
           </div>
         ))}
 

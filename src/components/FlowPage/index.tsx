@@ -37,11 +37,6 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">{repo} flow</h2>
-        <div className="flex items-center text-gray-900 space-x-4">
-          <Link to="/" className="text-sm text-blue-300 hover:underline">
-            ← Back to home
-          </Link>
-        </div>
       </div>
 
       {/* Legend */}

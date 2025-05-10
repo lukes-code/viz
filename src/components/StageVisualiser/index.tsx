@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { FlowData } from "../../types";
 import ConfirmModal from "../ConfirmModal";
 import Card from "../Card";
+import {
+  ExternalLinkIcon,
+  Pencil1Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 
 type Props = {
   flowData: FlowData;
@@ -50,24 +55,24 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
                 <>
                   <button
                     onClick={() => navigate(`/edit/${repo}`)}
-                    className="text-white hover:text-gray-300"
+                    className="text-white hover:text-gray-300 cursor-pointer"
                     title="Edit"
                   >
-                    ✏️
+                    <Pencil1Icon className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => navigate(`/flow/${repo}`)}
-                    className="text-blue-400 hover:text-blue-300"
+                    className="text-blue-400 hover:text-blue-300 cursor-pointer"
                     title="View"
                   >
-                    ↗
+                    <ExternalLinkIcon className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => handleDeleteRepo(repo)}
                     title="Delete"
-                    className="text-red-500 hover:text-red-400"
+                    className="text-red-500 hover:text-red-400 absolute bottom-6 right-8 cursor-pointer"
                   >
-                    🗑️
+                    <TrashIcon className="w-5 h-5" />
                   </button>
                 </>
               }
@@ -83,7 +88,7 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
               </div>
 
               {/* Description */}
-              <div className="text-sm text-white mt-2 truncate">
+              <div className="text-sm text-white mt-2 truncate max-w-[85%]">
                 {flowData[repo].description || "No description"}
               </div>
             </Card>
@@ -91,9 +96,9 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
 
           <button
             onClick={() => navigate("/create")}
-            className="p-6 min-h-[154px] rounded-xl bg-white/5 backdrop-blur border border-dashed border-white/10 shadow-inner flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+            className="cursor-pointer p-6 min-h-[154px] rounded-xl bg-white/5 backdrop-blur border border-dashed border-white/10 shadow-inner flex items-center justify-center text-white hover:bg-white/10 transition-colors"
           >
-            <span className="text-lg font-semibold">+ Add new flow</span>
+            <span className="text-lg font-semibold">+ Add flow</span>
           </button>
         </div>
 
@@ -121,16 +126,16 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
 
           <button
             onClick={() => navigate("/create-node-types")}
-            className="p-6 min-h-[154px] rounded-xl bg-white/5 backdrop-blur border border-dashed border-white/10 shadow-inner flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+            className="cursor-pointer p-6 min-h-[122px] rounded-xl bg-white/5 backdrop-blur border border-dashed border-white/10 shadow-inner flex items-center justify-center text-white hover:bg-white/10 transition-colors"
           >
-            <span className="text-lg font-semibold">+ Add new type</span>
+            <span className="text-lg font-semibold">+ Add type</span>
           </button>
         </div>
       </div>
 
       <ConfirmModal
         isOpen={showDeleteModal}
-        title="Are you sure you want to delete this repo?"
+        title="Are you sure you want to delete this flow?"
         onCancel={cancelDeleteRepo}
         onConfirm={confirmDeleteRepo}
       />

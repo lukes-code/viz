@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { colorPalette } from "../../constants";
 import Button from "../Button";
 import { ButtonType } from "../../types";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 type CustomType = {
   label: string;
@@ -139,20 +140,16 @@ const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
               </div>
             </div>
 
-            <Button
+            <button
               onClick={() => handleRemoveType(key)}
-              type={ButtonType.DANGER}
+              title="Delete"
+              className="text-red-500 hover:text-red-400 cursor-pointer"
             >
-              Remove
-            </Button>
+              <TrashIcon className="w-5 h-5" />
+            </button>
           </li>
         ))}
       </ul>
-
-      {/* Back Button */}
-      <div className="mt-8 text-center">
-        <Button onClick={() => navigate("/")}>Back to home</Button>
-      </div>
     </div>
   );
 };
