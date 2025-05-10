@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FlowData, Stage } from "../../types";
-import { flowTemplates } from "../FlowTemplates";
 import ConfirmModal from "../ConfirmModal";
+import { coreTechList, flowTemplates } from "../../constants";
 
 type CustomTypes = {
   [key: string]: {
@@ -16,93 +16,6 @@ type Props = {
   setFlowData: React.Dispatch<React.SetStateAction<FlowData>>;
   customTypes: CustomTypes;
 };
-
-const coreTechList = [
-  "React",
-  "Vue",
-  "Angular",
-  "Laravel",
-  "Django",
-  "Python",
-  "Node.js",
-  "Express",
-  "Java",
-  "Spring",
-  "Ruby on Rails",
-  "PHP",
-  "Go",
-  "Rust",
-  "Swift",
-  "Kotlin",
-  "C++",
-  "C#",
-  "TypeScript",
-  "JavaScript",
-  "HTML5",
-  "CSS3",
-  "SASS",
-  "Tailwind CSS",
-  "Bootstrap",
-  "JQuery",
-  "GraphQL",
-  "Apollo",
-  "MySQL",
-  "PostgreSQL",
-  "MongoDB",
-  "Firebase",
-  "AWS",
-  "Google Cloud",
-  "Azure",
-  "Docker",
-  "Kubernetes",
-  "CI/CD",
-  "Jenkins",
-  "Git",
-  "GitHub",
-  "GitLab",
-  "Bitbucket",
-  "Terraform",
-  "Ansible",
-  "Nginx",
-  "Apache",
-  "Vercel",
-  "Netlify",
-  "Heroku",
-  "Rails",
-  "Next.js",
-  "Gatsby",
-  "Nuxt.js",
-  "Flutter",
-  "React Native",
-  "Electron",
-  "Elixir",
-  "Scala",
-  "Haskell",
-  "Figma",
-  "Sketch",
-  "Adobe XD",
-  "InVision",
-  "Zeplin",
-  "Jira",
-  "Trello",
-  "Notion",
-  "Slack",
-  "Discord",
-  "Zoom",
-  "Stripe",
-  "PayPal",
-  "MongoDB Atlas",
-  "ElasticSearch",
-  "Redis",
-  "SQLite",
-  "Salesforce",
-  "Shopify",
-  "Magento",
-  "WordPress",
-  "BigCommerce",
-  "Wix",
-  "Squarespace",
-];
 
 const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   const { repo } = useParams<{ repo: string }>();
@@ -268,7 +181,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
             value={repoName}
             onChange={(e) => setRepoName(e.target.value)}
             className="w-full mb-4 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            placeholder="Repo name"
+            placeholder="Flow name"
           />
 
           <select
@@ -325,7 +238,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
             </h3>
 
             <div className="grid md:grid-cols-2 gap-4">
-              {step.map((stage, i) => {
+              {step.map((stage) => {
                 const globalIndex = stages.findIndex((s) => s === stage);
 
                 return (

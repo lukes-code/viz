@@ -122,7 +122,7 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
 
         {/* Node Types Section */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-extrabold tracking-tight">Node Types</h2>
+          <h2 className="text-3xl font-extrabold tracking-tight">Node types</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">

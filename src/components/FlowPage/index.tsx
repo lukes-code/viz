@@ -16,7 +16,7 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
   if (!repo || !flowData[repo]) {
     return (
       <div className="max-w-xl mx-auto bg-white p-6 rounded shadow text-center">
-        <h2 className="text-xl font-bold text-red-600 mb-4">Repo not found!</h2>
+        <h2 className="text-xl font-bold text-red-600 mb-4">Flow not found!</h2>
         <Link to="/" className="text-blue-500 underline">
           Back to Home
         </Link>
@@ -57,19 +57,19 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
                 onSelect={() => handleExport("image")}
                 className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
               >
-                To Image
+                To image
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
           <Link to="/" className="text-sm text-blue-300 hover:underline">
-            ← Back to Home
+            ← Back to home
           </Link>
         </div>
       </div>
 
       {/* Legend */}
       <div className="bg-white text-gray-900 p-4 rounded shadow mb-6">
-        <h3 className="text-lg font-bold mb-2">Node Types</h3>
+        <h3 className="text-lg font-bold mb-2">Node types</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {Object.keys(customTypes).map((type) => {
             const nodeType = customTypes[type];

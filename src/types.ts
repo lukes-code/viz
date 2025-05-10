@@ -1,8 +1,8 @@
 export type Stage = {
   name: string;
-  isJoin: boolean; // Determines if this stage is part of an asynchronous flow (join)
+  isJoin: boolean;
   label: string;
-  color: string; // Color of the stage
+  color: string;
 };
 
 export type FlowRepo = {
@@ -16,7 +16,7 @@ export type FlowCanvasProps = {
 
 export type FlowData = {
   [key: string]: {
-    stages: Stage[]; // Each repo now has stages that can contain custom types
+    stages: Stage[];
     description: string;
     coreTech: string[];
   };
