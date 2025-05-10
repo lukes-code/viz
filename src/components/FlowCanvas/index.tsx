@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -10,12 +10,13 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { Stage } from "../../types";
+import * as htmlToImage from "html-to-image";
 
 type FlowCanvasProps = {
   stages: Stage[];
 };
 
-export const FlowCanvas = ({ stages }: FlowCanvasProps) => {
+export const FlowCanvas = forwardRef(({ stages }: FlowCanvasProps, ref) => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
 
@@ -137,6 +138,38 @@ export const FlowCanvas = ({ stages }: FlowCanvasProps) => {
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    exportToJson: () => {
+      if (reactFlowInstance.current) {
+        const flow = reactFlowInstance.current.toObject();
+        const blob = new Blob([JSON.stringify(flow, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "flow.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    },
+    exportToImage: () => {
+      if (reactFlowWrapper.current) {
+        htmlToImage
+          .toPng(reactFlowWrapper.current)
+          .then((dataUrl) => {
+            const link = document.createElement("a");
+            link.download = "flow.png";
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch((err) => {
+            console.error("Image export failed", err);
+          });
+      }
+    },
+  }));
+
   return (
     <div className="h-[800px] relative bg-white text-gray-900 rounded-xl shadow overflow-hidden">
       <ReactFlowProvider>
@@ -158,4 +191,4 @@ export const FlowCanvas = ({ stages }: FlowCanvasProps) => {
       </ReactFlowProvider>
     </div>
   );
-};
+});

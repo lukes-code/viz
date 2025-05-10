@@ -1,6 +1,8 @@
 import { useParams, Link } from "react-router-dom";
+import { useRef } from "react";
 import { FlowCanvas } from "../FlowCanvas";
 import { FlowData } from "../../types";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 type FlowPageProps = {
   flowData: FlowData;
@@ -9,6 +11,7 @@ type FlowPageProps = {
 
 const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
   const { repo } = useParams<{ repo: string }>();
+  const canvasRef = useRef<any>(null);
 
   if (!repo || !flowData[repo]) {
     return (
@@ -23,16 +26,48 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
 
   const stages = flowData[repo].stages;
 
+  const handleExport = (type: "json" | "image") => {
+    if (!canvasRef.current) return;
+    if (type === "json") canvasRef.current.exportToJson();
+    if (type === "image") canvasRef.current.exportToImage();
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">{repo} flow</h2>
-        <Link to="/" className="text-sm text-blue-600 hover:underline">
-          ← Back to Home
-        </Link>
+        <div className="flex items-center text-gray-900 space-x-4">
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button className="bg-gray-100 px-3 py-1 rounded hover:bg-gray-200 text-sm">
+                Export ▼
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content
+              sideOffset={5}
+              className="bg-white border shadow-md rounded p-1 w-32 z-50"
+            >
+              <DropdownMenu.Item
+                onSelect={() => handleExport("json")}
+                className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+              >
+                To JSON
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                onSelect={() => handleExport("image")}
+                className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+              >
+                To Image
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+          <Link to="/" className="text-sm text-blue-300 hover:underline">
+            ← Back to Home
+          </Link>
+        </div>
       </div>
 
-      {/* Key (Legend) */}
+      {/* Legend */}
       <div className="bg-white text-gray-900 p-4 rounded shadow mb-6">
         <h3 className="text-lg font-bold mb-2">Node Types</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -51,7 +86,7 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
         </div>
       </div>
 
-      <FlowCanvas stages={stages} />
+      <FlowCanvas ref={canvasRef} stages={stages} />
     </div>
   );
 };

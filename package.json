@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "2.1.14",
+    "html-to-image": "1.11.13",
     "path": "0.12.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
