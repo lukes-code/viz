@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { defaultFlowData } from "./data/flowData";
+import { defaultCustomTypes, defaultFlowData } from "./data/flowData";
 import StageVisualiser from "./components/StageVisualiser";
 import FlowPage from "./components/FlowPage";
 import RepoPage from "./components/RepoPage";
@@ -12,7 +12,7 @@ const App = () => {
   const [flowData, setFlowData] = useState<FlowData>(defaultFlowData);
   const [customTypes, setCustomTypes] = useState<{
     [key: string]: { label: string; color: string };
-  }>({});
+  }>(defaultCustomTypes);
 
   return (
     <Router>
@@ -27,6 +27,7 @@ const App = () => {
                 <StageVisualiser
                   flowData={flowData}
                   setFlowData={setFlowData}
+                  customTypes={customTypes}
                 />
               }
             />

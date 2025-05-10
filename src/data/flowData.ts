@@ -7,27 +7,99 @@ export type FlowRepo = {
 export const defaultFlowData: FlowData = {
   frontend: {
     stages: [
-      { name: "Local", type: "env", isJoin: false },
-      { name: "Raise PR", type: "manual", isJoin: false },
-      { name: "Review PR", type: "manual", isJoin: true },
-      { name: "Chromatic", type: "manual", isJoin: true },
-      { name: "CI/CD", type: "automation", isJoin: false },
-      { name: "Merge PR", type: "manual", isJoin: false },
-      { name: "Testing", type: "env", isJoin: false },
+      {
+        name: "Local",
+        isJoin: false,
+        label: "Environment",
+        color: "#FF5733",
+      },
+      {
+        name: "Raise PR",
+        isJoin: false,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "Review PR",
+        isJoin: true,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "Chromatic",
+        isJoin: true,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "CI/CD",
+        isJoin: false,
+        label: "Automation",
+        color: "#9DFF33",
+      },
+      {
+        name: "Merge PR",
+        isJoin: false,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "Testing",
+        isJoin: false,
+        label: "Environment",
+        color: "#FF5733",
+      },
     ],
     description: "A frontend repository", // Add description here
-    coreTech: "React", // Add core technologies here
+    coreTech: ["React"], // Add core technologies here
   },
   backend: {
     stages: [
-      { name: "Local", type: "env", isJoin: false },
-      { name: "Raise PR", type: "manual", isJoin: false },
-      { name: "Review PR", type: "manual", isJoin: true },
-      { name: "CI/CD", type: "automation", isJoin: false },
-      { name: "Merge PR", type: "manual", isJoin: false },
-      { name: "Testing", type: "env", isJoin: false },
+      {
+        name: "Local",
+        isJoin: false,
+        label: "Environment",
+        color: "#FF5733",
+      },
+      {
+        name: "Raise PR",
+        isJoin: false,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "Review PR",
+        isJoin: true,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "CI/CD",
+        isJoin: false,
+        label: "Automation",
+        color: "#9DFF33",
+      },
+      {
+        name: "Merge PR",
+        isJoin: false,
+        label: "Manual",
+        color: "#3357FF",
+      },
+      {
+        name: "Testing",
+        isJoin: false,
+        label: "Environment",
+        color: "#FF5733",
+      },
     ],
     description: "A backend repository", // Add description here
-    coreTech: "Node.js", // Add core technologies here
+    coreTech: ["Node.js"], // Add core technologies here
   },
+};
+
+// Default Node Types (Custom Types)
+export const defaultCustomTypes = {
+  frontend: { label: "Manual", color: "#3357FF" },
+  backend: { label: "Automation", color: "#9DFF33" },
+  database: { label: "Environment", color: "#FF5733" },
 };

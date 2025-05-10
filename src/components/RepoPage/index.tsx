@@ -119,7 +119,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   const [stages, setStages] = useState<Stage[]>(
     repoData.stages.length > 0
       ? repoData.stages
-      : [{ name: "", type: "env", isJoin: false, label: "", color: "" }]
+      : [{ name: "", isJoin: false, label: "", color: "" }]
   );
   const [templateSelect, setTemplateSelect] = useState<string>("");
   const [description, setDescription] = useState(repoData.description);
@@ -139,21 +139,24 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
     }
   }, [isEditMode, repoData]);
 
+  const updateStageAt = (index: number, changes: Partial<Stage>) => {
+    setStages((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], ...changes };
+      return updated;
+    });
+  };
+
   const handleStageChange = (
     index: number,
     key: keyof Stage,
     value: string | boolean
   ) => {
-    const updated = [...stages];
-    updated[index] = { ...updated[index], [key]: value };
-    setStages(updated);
+    updateStageAt(index, { [key]: value });
   };
 
   const handleAddStage = () =>
-    setStages([
-      ...stages,
-      { name: "", type: "env", isJoin: false, label: "", color: "" },
-    ]);
+    setStages([...stages, { name: "", isJoin: false, label: "", color: "" }]);
 
   const handleRemoveStage = (index: number) => {
     const updated = [...stages];
@@ -180,26 +183,13 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
       return;
     }
 
-    // Ensure stages include label and color
-    const updatedStages = stages.map((stage) => {
-      const typeConfig = customTypes[stage.type];
-      if (typeConfig) {
-        return {
-          ...stage,
-          label: typeConfig.label, // Assign label from customTypes
-          color: typeConfig.color, // Assign color from customTypes
-        };
-      }
-      return stage;
-    });
-
     const updatedFlowData = { ...flowData };
     if (isEditMode) {
       delete updatedFlowData[repo ?? ""];
     }
 
     updatedFlowData[repoName] = {
-      stages: updatedStages.filter((s) => s.name.trim()),
+      stages: stages.filter((s) => s.name.trim()),
       description: description.trim(),
       coreTech,
     };
@@ -295,7 +285,6 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
           </select>
         </div>
 
-        {/* Core Tech */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-purple-400">Core Tech</h3>
           <select
@@ -316,7 +305,6 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
           </select>
         </div>
 
-        {/* Description */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-purple-400">Description</h3>
           <textarea
@@ -338,14 +326,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
 
             <div className="grid md:grid-cols-2 gap-4">
               {step.map((stage, i) => {
-                const globalIndex = stages.findIndex(
-                  (s, idx) =>
-                    s.name === stage.name &&
-                    s.type === stage.type &&
-                    s.isJoin === stage.isJoin &&
-                    stages.slice(0, idx).filter((x) => x === s).length ===
-                      step.slice(0, i).filter((x) => x === stage).length
-                );
+                const globalIndex = stages.findIndex((s) => s === stage);
 
                 return (
                   <div
@@ -365,23 +346,29 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
 
                     <div className="mb-2">
                       <select
-                        value={stage.type}
-                        onChange={(e) =>
-                          handleStageChange(
-                            globalIndex,
-                            "type",
-                            e.target.value as Stage["type"]
-                          )
-                        }
+                        value={stage.label}
+                        onChange={(e) => {
+                          const selectedLabel = e.target.value;
+                          const foundEntry = Object.entries(customTypes).find(
+                            ([, val]) => val.label === selectedLabel
+                          );
+
+                          if (foundEntry) {
+                            const [, config] = foundEntry;
+                            updateStageAt(globalIndex, {
+                              label: config.label,
+                              color: config.color,
+                            });
+                          }
+                        }}
                         className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
                       >
-                        {Object.entries(customTypes).map(
-                          ([typeKey, config]) => (
-                            <option key={typeKey} value={typeKey}>
-                              {config.label}
-                            </option>
-                          )
-                        )}
+                        <option value="">Select type</option>
+                        {Object.entries(customTypes).map(([key, config]) => (
+                          <option key={key} value={config.label}>
+                            {config.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
@@ -403,7 +390,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
 
                     <button
                       onClick={() => handleRemoveStage(globalIndex)}
-                      className="text-red-400 text-sm mt-2 hover:underline"
+                      className="text-red-400 cursor-pointer text-sm mt-2 hover:underline"
                       disabled={stages.length === 1}
                     >
                       Remove
