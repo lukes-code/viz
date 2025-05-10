@@ -15,6 +15,8 @@ export const defaultFlowData: FlowData = {
       { name: "Merge PR", type: "manual", isJoin: false },
       { name: "Testing", type: "env", isJoin: false },
     ],
+    description: "A frontend repository", // Add description here
+    coreTech: "React", // Add core technologies here
   },
   backend: {
     stages: [
@@ -25,5 +27,7 @@ export const defaultFlowData: FlowData = {
       { name: "Merge PR", type: "manual", isJoin: false },
       { name: "Testing", type: "env", isJoin: false },
     ],
+    description: "A backend repository", // Add description here
+    coreTech: "Node.js", // Add core technologies here
   },
 };

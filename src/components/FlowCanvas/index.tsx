@@ -1,46 +1,32 @@
-import React from "react";
+import React, { useRef } from "react";
 import ReactFlow, {
   Background,
   Controls,
   MiniMap,
+  ReactFlowProvider,
   Node,
   Edge,
+  ReactFlowInstance,
 } from "reactflow";
 import "reactflow/dist/style.css";
-
-type Stage = {
-  name: string;
-  type: string;
-  isJoin: boolean;
-};
+import { Stage } from "../../types";
 
 type FlowCanvasProps = {
-  repo: string;
   stages: Stage[];
 };
 
-const getNodeColor = (type: string): string => {
-  switch (type) {
-    case "env":
-      return "lightgreen";
-    case "manual":
-      return "lightblue";
-    case "automation":
-      return "orange";
-    default:
-      return "gray";
-  }
-};
+export const FlowCanvas = ({ stages }: FlowCanvasProps) => {
+  const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
 
-export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
 
   let nodeId = 1;
   let y = 0;
   let x = 0;
-  const xSpacing = 200; // Horizontal spacing between nodes
-  const ySpacing = 150; // Vertical spacing between nodes
+  const xSpacing = 200;
+  const ySpacing = 150;
 
   for (let i = 0; i < stages.length; ) {
     const stage = stages[i];
@@ -49,7 +35,6 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
       const joinGroup: { stage: Stage; index: number; nodeId: number }[] = [];
       let j = i;
 
-      // Group all isJoin:true + the immediate next item
       while (
         j < stages.length &&
         (stages[j].isJoin || (j > i && stages[j - 1].isJoin))
@@ -60,27 +45,23 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
       }
 
       const startX = x;
-      const totalWidth = (joinGroup.length - 1) * xSpacing; // Total width of the group
-
-      // Center the isJoin nodes horizontally
+      const totalWidth = (joinGroup.length - 1) * xSpacing;
       const centerX = startX - totalWidth / 2;
 
-      // Position the isJoin nodes horizontally in the group
       for (let k = 0; k < joinGroup.length; k++) {
         const { stage, nodeId: id } = joinGroup[k];
         nodes.push({
           id: `${id}`,
-          data: { label: `${stage.name} (${stage.type})` },
+          data: { label: `${stage.name}` },
           position: { x: centerX + k * xSpacing, y },
           style: {
-            backgroundColor: getNodeColor(stage.type),
+            backgroundColor: `${stage.color}`,
             padding: 10,
             borderRadius: 5,
           },
         });
       }
 
-      // 🔧 Connect previous node to ALL join group members
       if (i > 0) {
         const sourceId = `${nodeId - joinGroup.length - 1}`;
         for (const { nodeId: targetId } of joinGroup) {
@@ -89,12 +70,10 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
             source: sourceId,
             target: `${targetId}`,
             animated: true,
-            // label: `${stages[i - 1].name} → ${stage.name}`,
           });
         }
       }
 
-      // Next stage to connect to all join group items
       const nextIndex = j;
       if (nextIndex < stages.length) {
         const nextStage = stages[nextIndex];
@@ -102,25 +81,24 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
 
         nodes.push({
           id: targetId,
-          data: { label: `${repo}: ${nextStage.name} (${nextStage.type})` },
+          data: { label: `${nextStage.name}` },
           position: {
-            x: centerX + ((joinGroup.length - 1) * xSpacing) / 2, // Center the target node
+            x: centerX + ((joinGroup.length - 1) * xSpacing) / 2,
             y: y + ySpacing,
           },
           style: {
-            backgroundColor: getNodeColor(nextStage.type),
+            backgroundColor: `${nextStage.color}`,
             padding: 10,
             borderRadius: 5,
           },
         });
 
-        for (const { nodeId: sourceId, stage } of joinGroup) {
+        for (const { nodeId: sourceId } of joinGroup) {
           edges.push({
             id: `e${sourceId}-${nodeId}`,
             source: `${sourceId}`,
             target: targetId,
             animated: true,
-            // label: `${stage.name} → ${nextStage.name}`,
           });
         }
 
@@ -133,13 +111,12 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
       y += 2 * ySpacing;
       x = 0;
     } else {
-      // Regular non-join stage
       nodes.push({
         id: `${nodeId}`,
-        data: { label: `${repo}: ${stage.name} (${stage.type})` },
+        data: { label: `${stage.name}` },
         position: { x, y },
         style: {
-          backgroundColor: getNodeColor(stage.type),
+          backgroundColor: `${stage.color}`,
           padding: 10,
           borderRadius: 5,
         },
@@ -151,7 +128,6 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
           source: `${nodeId - 1}`,
           target: `${nodeId}`,
           animated: true,
-          // label: `${stages[i - 1].name} → ${stage.name}`,
         });
       }
 
@@ -162,19 +138,24 @@ export const FlowCanvas = ({ repo, stages }: FlowCanvasProps) => {
   }
 
   return (
-    <div className="h-[1000px] bg-white rounded-xl shadow">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView
-        proOptions={{ hideAttribution: true }}
-      >
-        <Background />
-        <Controls />
-        <MiniMap />
-      </ReactFlow>
+    <div className="h-[800px] relative bg-white text-gray-900 rounded-xl shadow overflow-hidden">
+      <ReactFlowProvider>
+        <div className="w-full h-full" ref={reactFlowWrapper}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            fitView
+            onInit={(instance) => {
+              reactFlowInstance.current = instance;
+            }}
+            proOptions={{ hideAttribution: true }}
+          >
+            <Background />
+            <MiniMap />
+            <Controls />
+          </ReactFlow>
+        </div>
+      </ReactFlowProvider>
     </div>
   );
 };
-
-export default FlowCanvas;
