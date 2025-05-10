@@ -21,3 +21,9 @@ export type FlowData = {
     coreTech: string[];
   };
 };
+
+export enum ButtonType {
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+  DANGER = "danger",
+}

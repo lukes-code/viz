@@ -2,30 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlowData } from "../../types";
 import ConfirmModal from "../ConfirmModal";
-
-// Reusable Card Component
-const Card = ({
-  title,
-  children,
-  actions,
-}: {
-  title: string;
-  children: React.ReactNode;
-  actions?: React.ReactNode;
-}) => {
-  return (
-    <div className="p-6 relative rounded-xl bg-white/5 backdrop-blur border border-white/10 shadow-inner flex flex-col">
-      {/* Header */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="font-semibold text-lg text-white">{title}</div>
-        <div className="flex space-x-2 text-sm">{actions}</div>
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-col gap-2">{children}</div>
-    </div>
-  );
-};
+import Card from "../Card";
 
 type Props = {
   flowData: FlowData;

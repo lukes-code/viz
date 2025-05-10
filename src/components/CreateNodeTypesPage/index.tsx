@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { colorPalette } from "../../constants";
+import Button from "../Button";
+import { ButtonType } from "../../types";
 
 type CustomType = {
   label: string;
@@ -104,12 +106,7 @@ const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
       </div>
 
       <div className="mb-6">
-        <button
-          onClick={handleAddType}
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-        >
-          Add Type
-        </button>
+        <Button onClick={handleAddType}>Add type</Button>
       </div>
 
       {/* Existing Types */}
@@ -142,24 +139,19 @@ const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
               </div>
             </div>
 
-            <button
+            <Button
               onClick={() => handleRemoveType(key)}
-              className="text-red-400 text-sm mt-2 sm:mt-0 hover:underline"
+              type={ButtonType.DANGER}
             >
               Remove
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
 
       {/* Back Button */}
       <div className="mt-8 text-center">
-        <button
-          onClick={() => navigate("/")}
-          className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition"
-        >
-          Go Back
-        </button>
+        <Button onClick={() => navigate("/")}>Back to home</Button>
       </div>
     </div>
   );

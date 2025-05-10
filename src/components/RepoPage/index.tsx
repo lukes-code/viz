@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FlowData, Stage } from "../../types";
+import { ButtonType, FlowData, Stage } from "../../types";
 import ConfirmModal from "../ConfirmModal";
 import { coreTechList, flowTemplates } from "../../constants";
+import Button from "../Button";
 
 type CustomTypes = {
   [key: string]: {
@@ -301,13 +302,13 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
                       Join next step
                     </label>
 
-                    <button
+                    <Button
                       onClick={() => handleRemoveStage(globalIndex)}
-                      className="text-red-400 cursor-pointer text-sm mt-2 hover:underline"
                       disabled={stages.length === 1}
+                      type={ButtonType.DANGER}
                     >
                       Remove
-                    </button>
+                    </Button>
                   </div>
                 );
               })}
@@ -316,19 +317,13 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
         ))}
 
         <div className="flex flex-wrap gap-4">
-          <button
-            onClick={handleAddStage}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg transition"
-          >
+          <Button onClick={handleAddStage} type={ButtonType.SECONDARY}>
             ➕ Add Step
-          </button>
+          </Button>
 
-          <button
-            onClick={handleSave}
-            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg transition"
-          >
+          <Button onClick={handleSave} type={ButtonType.PRIMARY}>
             {isEditMode ? "💾 Save Changes" : "🚀 Create Repo"}
-          </button>
+          </Button>
         </div>
       </div>
 

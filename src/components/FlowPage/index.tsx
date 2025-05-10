@@ -1,8 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { useRef } from "react";
 import { FlowCanvas } from "../FlowCanvas";
-import { FlowData } from "../../types";
+import { ButtonType, FlowData } from "../../types";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import Button from "../Button";
 
 type FlowPageProps = {
   flowData: FlowData;
@@ -37,30 +38,6 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">{repo} flow</h2>
         <div className="flex items-center text-gray-900 space-x-4">
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <button className="bg-gray-100 px-3 py-1 rounded hover:bg-gray-200 text-sm">
-                Export ▼
-              </button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content
-              sideOffset={5}
-              className="bg-white border shadow-md rounded p-1 w-32 z-50"
-            >
-              <DropdownMenu.Item
-                onSelect={() => handleExport("json")}
-                className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-              >
-                To JSON
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                onSelect={() => handleExport("image")}
-                className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-              >
-                To image
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
           <Link to="/" className="text-sm text-blue-300 hover:underline">
             ← Back to home
           </Link>
@@ -68,21 +45,52 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
       </div>
 
       {/* Legend */}
-      <div className="bg-white text-gray-900 p-4 rounded shadow mb-6">
+      <div className=" text-white py-4 rounded shadow">
         <h3 className="text-lg font-bold mb-2">Node types</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {Object.keys(customTypes).map((type) => {
-            const nodeType = customTypes[type];
-            return (
-              <div key={type} className="flex items-center">
-                <span
-                  style={{ backgroundColor: nodeType.color }}
-                  className="w-4 h-4 rounded-full mr-2"
-                ></span>
-                <span className="text-sm">{nodeType.label}</span>
-              </div>
-            );
-          })}
+        <div className="flex justify-between">
+          <div className="flex gap-4">
+            {Object.keys(customTypes).map((type) => {
+              const nodeType = customTypes[type];
+              return (
+                <div
+                  key={type}
+                  className="flex items-center bg-white text-gray-900 p-2 w-fit rounded-4xl"
+                >
+                  <span
+                    style={{ backgroundColor: nodeType.color }}
+                    className="w-4 h-4 rounded-full mr-1"
+                  />
+                  <span className="text-sm">{nodeType.label}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="text-gray-900 bg-white rounded-4xl">
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button className="rounded-4xl cursor-pointer">
+                  <Button type={ButtonType.SECONDARY}>Export ▼</Button>
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content
+                sideOffset={5}
+                className="bg-white border shadow-md rounded p-1 w-32 z-50"
+              >
+                <DropdownMenu.Item
+                  onSelect={() => handleExport("json")}
+                  className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                >
+                  To JSON
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onSelect={() => handleExport("image")}
+                  className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                >
+                  To image
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          </div>
         </div>
       </div>
 

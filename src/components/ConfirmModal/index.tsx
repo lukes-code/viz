@@ -1,3 +1,6 @@
+import { ButtonType } from "../../types";
+import Button from "../Button";
+
 type ConfirmModalProps = {
   isOpen: boolean;
   title: string;
@@ -22,18 +25,12 @@ const ConfirmModal = ({
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
         <h3 className="text-lg font-semibold mb-4 text-gray-800">{title}</h3>
         <div className="flex justify-end space-x-2">
-          <button
-            onClick={onCancel}
-            className="bg-gray-300 text-gray-900 px-4 py-2 rounded hover:bg-gray-400"
-          >
+          <Button onClick={onCancel} type={ButtonType.SECONDARY}>
             {cancelText}
-          </button>
-          <button
-            onClick={onConfirm}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
+          </Button>
+          <Button onClick={onConfirm} type={ButtonType.DANGER}>
             {confirmText}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
