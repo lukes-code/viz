@@ -27,18 +27,22 @@ Features:
 WIP screenshots:
 
 Home:
-<img width="1663" alt="image" src="https://github.com/user-attachments/assets/c44efc1f-16bd-423d-b7b4-8eaf1a353c23" />
+<img width="1446" alt="image" src="https://github.com/user-attachments/assets/1f32a69e-5e8a-46e8-82ee-8833bd206c7f" />
 
 Flow:
-<img width="1728" alt="image" src="https://github.com/user-attachments/assets/ccd0da1c-8220-49db-ac1d-ef796eb6e1b0" />
+<img width="1353" alt="image" src="https://github.com/user-attachments/assets/fa983ef7-8f8c-4232-a224-4909dbc35bb2" />
 <img width="301" alt="image" src="https://github.com/user-attachments/assets/e34e2ffc-8bf5-4b48-81be-fdb2a2e2b0e3" />
 
 
 Create/edit flow:
-<img width="1699" alt="image" src="https://github.com/user-attachments/assets/a58978e7-a71d-432d-9c7c-d82b66320be4" />
-<img width="1728" alt="image" src="https://github.com/user-attachments/assets/f965c893-c6d3-497a-9429-9790f3a27f4c" />
-<img width="1728" alt="image" src="https://github.com/user-attachments/assets/b6cb16f1-f06d-46f2-bc42-1839fb949f04" />
+<img width="1337" alt="image" src="https://github.com/user-attachments/assets/f3c5bdcd-5dbf-4e38-96a2-12426d64dc19" />
+<img width="1331" alt="image" src="https://github.com/user-attachments/assets/a1930da6-3d84-4366-a358-306591ca89f3" />
+
 
 Create edit types:
-<img width="1728" alt="image" src="https://github.com/user-attachments/assets/ac872935-8e15-4401-8533-d02a1697be97" />
+<img width="1350" alt="image" src="https://github.com/user-attachments/assets/4aa7e2a3-84f7-44ee-bc22-93eb379d8ceb" />
+<img width="1354" alt="image" src="https://github.com/user-attachments/assets/db31f8e8-f4f7-489e-bffd-4482a44780f9" />
+<img width="1343" alt="image" src="https://github.com/user-attachments/assets/60b8d5cc-963f-49ad-a075-3e0f547018b3" />
+
+
 
