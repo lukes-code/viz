@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-900 text-white transition-colors">
+      <div className="min-h-screen bg-gray-950 text-white transition-colors">
         <Nav />
 
         <main className="max-w-7xl mx-auto px-4 py-8 min-h-full">

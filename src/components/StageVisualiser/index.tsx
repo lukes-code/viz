@@ -70,7 +70,7 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
                   <button
                     onClick={() => handleDeleteRepo(repo)}
                     title="Delete"
-                    className="text-red-500 hover:text-red-400 absolute bottom-6 right-8 cursor-pointer"
+                    className="text-gray-400 hover:text-red-400 absolute bottom-6 right-8 cursor-pointer"
                   >
                     <TrashIcon className="w-5 h-5" />
                   </button>
@@ -117,7 +117,7 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
                   <span
                     style={{ backgroundColor: nodeType.color }}
                     className="w-4 h-4 rounded-full"
-                  ></span>
+                  />
                   <span className="text-sm text-white">{nodeType.label}</span>
                 </div>
               </Card>

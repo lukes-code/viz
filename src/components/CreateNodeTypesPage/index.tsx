@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FilePlusIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { colorPalette } from "../../constants";
 import Button from "../Button";
 import { ButtonType } from "../../types";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { classNames } from "../../utils";
 
 type CustomType = {
   label: string;
@@ -22,12 +22,21 @@ type Props = {
 };
 
 const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
+  const [editModeKeys, setEditModeKeys] = useState<Set<string>>(new Set());
+  const [showNewTypeForm, setShowNewTypeForm] = useState(false);
   const [newType, setNewType] = useState<CustomType>({
     label: "",
     color: "#000000",
   });
 
-  const navigate = useNavigate();
+  const toggleEditMode = (key: string) => {
+    setEditModeKeys((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(key)) newSet.delete(key);
+      else newSet.add(key);
+      return newSet;
+    });
+  };
 
   const handleAddType = () => {
     if (!newType.label.trim()) return;
@@ -38,25 +47,24 @@ const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
       [key]: { label: newType.label.trim(), color: newType.color },
     }));
     setNewType({ label: "", color: "#000000" });
+    setShowNewTypeForm(false);
   };
 
   const handleEditType = (
-    originalKey: string,
+    key: string,
     updated: { label?: string; color?: string }
   ) => {
     setCustomTypes((prev) => {
-      const existing = prev[originalKey];
+      const existing = prev[key];
       if (!existing) return prev;
 
-      const newLabel = updated.label ?? existing.label;
-      const newColor = updated.color ?? existing.color;
-      const newKey = newLabel.trim().toLowerCase();
-
-      const updatedTypes = { ...prev };
-      delete updatedTypes[originalKey];
-      updatedTypes[newKey] = { label: newLabel, color: newColor };
-
-      return updatedTypes;
+      return {
+        ...prev,
+        [key]: {
+          label: updated.label ?? existing.label,
+          color: updated.color ?? existing.color,
+        },
+      };
     });
   };
 
@@ -69,87 +77,138 @@ const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-gray-800 rounded-lg">
-      <h1 className="text-2xl font-bold text-center text-white mb-6">
-        Node types
-      </h1>
-
-      {/* Add New Type */}
-      <div className="mb-4">
-        <label htmlFor="label" className="block text-sm text-gray-300">
-          Type label
-        </label>
-        <input
-          id="label"
-          type="text"
-          value={newType.label}
-          onChange={(e) =>
-            setNewType((prev) => ({ ...prev, label: e.target.value }))
-          }
-          className="w-full px-3 py-2 rounded border border-gray-500 bg-gray-700 text-white"
-        />
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-white">Node types</h1>
+        <Button
+          type={ButtonType.SECONDARY}
+          onClick={() => setShowNewTypeForm((prev) => !prev)}
+        >
+          + Create new type
+        </Button>
       </div>
 
-      <div className="mb-6">
-        <label className="block text-sm text-gray-300">Node color</label>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {colorPalette.map((color) => (
-            <button
-              key={color}
-              style={{ backgroundColor: color }}
-              className={`w-8 h-8 rounded-full ${
-                newType.color === color ? "border-4 border-white" : ""
-              }`}
-              onClick={() => setNewType((prev) => ({ ...prev, color: color }))}
-            />
-          ))}
-        </div>
-      </div>
+      {showNewTypeForm && (
+        <div className="mt-6 grid grid-cols-1 gap-6 mb-6">
+          <div className="bg-white/5 border border-dashed border-white/10 rounded-xl p-4 space-y-4">
+            <h2 className="text-lg font-semibold text-white">
+              Create new type
+            </h2>
 
-      <div className="mb-6">
-        <Button onClick={handleAddType}>Add type</Button>
-      </div>
-
-      {/* Existing Types */}
-      <h2 className="text-xl font-semibold text-white mt-6">Edit Node Types</h2>
-      <ul className="mt-4 space-y-4">
-        {Object.entries(customTypes).map(([key, type]) => (
-          <li
-            key={key}
-            className="p-4 rounded bg-gray-700 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full">
+            <div>
+              <label
+                htmlFor="label"
+                className="block text-sm text-gray-300 mb-1"
+              >
+                Type label
+              </label>
               <input
+                id="label"
                 type="text"
-                value={type.label}
-                onChange={(e) => handleEditType(key, { label: e.target.value })}
-                className="px-3 py-1 rounded bg-gray-800 border border-gray-600 text-white flex-1"
+                value={newType.label}
+                onChange={(e) =>
+                  setNewType((prev) => ({ ...prev, label: e.target.value }))
+                }
+                className="w-full px-3 py-2 rounded border border-gray-500 bg-gray-700 text-white"
               />
+            </div>
 
-              <div className="flex flex-wrap gap-2">
+            <div>
+              <label className="block text-sm text-gray-300 mb-1">Color</label>
+              <div className="flex flex-wrap gap-2 mt-2">
                 {colorPalette.map((color) => (
                   <button
                     key={color}
                     style={{ backgroundColor: color }}
-                    className={`w-6 h-6 rounded-full ${
-                      type.color === color ? "border-4 border-white" : ""
+                    className={`w-6 h-6 rounded-full cursor-pointer ${
+                      newType.color === color ? "ring-2 ring-white" : ""
                     }`}
-                    onClick={() => handleEditType(key, { color })}
+                    onClick={() => setNewType((prev) => ({ ...prev, color }))}
                   />
                 ))}
               </div>
             </div>
 
-            <button
-              onClick={() => handleRemoveType(key)}
-              title="Delete"
-              className="text-red-500 hover:text-red-400 cursor-pointer"
-            >
-              <TrashIcon className="w-5 h-5" />
-            </button>
-          </li>
+            <div className="flex w-full justify-end">
+              <Button onClick={handleAddType}>Save type</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        {Object.entries(customTypes).map(([key, type]) => (
+          <div
+            key={key}
+            className={classNames(
+              editModeKeys.has(key)
+                ? "border border-dashed border-white/10"
+                : "border border-white/10",
+              "bg-white/5 rounded-xl p-4 space-y-3"
+            )}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {editModeKeys.has(key) ? (
+                  <input
+                    value={type.label}
+                    onChange={(e) =>
+                      handleEditType(key, { label: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded border border-gray-500 bg-gray-700 text-white"
+                  />
+                ) : (
+                  <>
+                    <span
+                      style={{ backgroundColor: type.color }}
+                      className="w-4 h-4 rounded-full"
+                    />
+                    <span className="text-sm text-white">{type.label}</span>
+                  </>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {editModeKeys.has(key) ? (
+                  <button
+                    onClick={() => toggleEditMode(key)}
+                    className="text-gray-400 hover:text-blue-400 cursor-pointer"
+                  >
+                    <FilePlusIcon className="w-5 h-5" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => toggleEditMode(key)}
+                    className="text-gray-400 hover:text-blue-400 cursor-pointer"
+                  >
+                    <Pencil1Icon className="w-5 h-5" />
+                  </button>
+                )}
+                <button
+                  onClick={() => handleRemoveType(key)}
+                  className="text-gray-400 hover:text-red-400 cursor-pointer"
+                >
+                  <TrashIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {editModeKeys.has(key) && (
+              <div className="flex gap-2 flex-wrap border border-dashed border-white/20 rounded-lg p-3">
+                {colorPalette.map((color) => (
+                  <button
+                    key={color}
+                    style={{ backgroundColor: color }}
+                    className={`w-6 h-6 rounded-full cursor-pointer ${
+                      type.color === color ? "ring-2 ring-white" : ""
+                    }`}
+                    onClick={() => handleEditType(key, { color })}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

@@ -25,117 +25,67 @@ export const FlowCanvas = forwardRef(({ stages }: FlowCanvasProps, ref) => {
 
   let nodeId = 1;
   let y = 0;
-  let x = 0;
   const xSpacing = 200;
   const ySpacing = 150;
 
-  for (let i = 0; i < stages.length; ) {
-    const stage = stages[i];
+  // Group stages by stageNumber
+  const groupedStages = stages.reduce((acc, stage) => {
+    const num = stage.stageNumber ?? 0;
+    if (!acc[num]) acc[num] = [];
+    acc[num].push(stage);
+    return acc;
+  }, {} as Record<number, Stage[]>);
 
-    if (stage.isJoin) {
-      const joinGroup: { stage: Stage; index: number; nodeId: number }[] = [];
-      let j = i;
+  // Sort stage numbers
+  const sortedStageNumbers = Object.keys(groupedStages)
+    .map(Number)
+    .sort((a, b) => a - b);
 
-      while (
-        j < stages.length &&
-        (stages[j].isJoin || (j > i && stages[j - 1].isJoin))
-      ) {
-        joinGroup.push({ stage: stages[j], index: j, nodeId });
-        j++;
-        nodeId++;
-      }
+  const stageIdMap = new Map<number, number[]>(); // track node IDs per stageNumber
 
-      const startX = x;
-      const totalWidth = (joinGroup.length - 1) * xSpacing;
-      const centerX = startX - totalWidth / 2;
+  for (let i = 0; i < sortedStageNumbers.length; i++) {
+    const stageNum = sortedStageNumbers[i];
+    const group = groupedStages[stageNum];
+    const totalWidth = (group.length - 1) * xSpacing;
+    const centerX = -totalWidth / 2;
 
-      for (let k = 0; k < joinGroup.length; k++) {
-        const { stage, nodeId: id } = joinGroup[k];
-        nodes.push({
-          id: `${id}`,
-          data: { label: `${stage.name}` },
-          position: { x: centerX + k * xSpacing, y },
-          style: {
-            backgroundColor: `${stage.color}`,
-            padding: 10,
-            borderRadius: 5,
-          },
-        });
-      }
+    const currentNodeIds: number[] = [];
 
-      if (i > 0) {
-        const sourceId = `${nodeId - joinGroup.length - 1}`;
-        for (const { nodeId: targetId } of joinGroup) {
-          edges.push({
-            id: `e${sourceId}-${targetId}`,
-            source: sourceId,
-            target: `${targetId}`,
-            animated: true,
-          });
-        }
-      }
-
-      const nextIndex = j;
-      if (nextIndex < stages.length) {
-        const nextStage = stages[nextIndex];
-        const targetId = `${nodeId}`;
-
-        nodes.push({
-          id: targetId,
-          data: { label: `${nextStage.name}` },
-          position: {
-            x: centerX + ((joinGroup.length - 1) * xSpacing) / 2,
-            y: y + ySpacing,
-          },
-          style: {
-            backgroundColor: `${nextStage.color}`,
-            padding: 10,
-            borderRadius: 5,
-          },
-        });
-
-        for (const { nodeId: sourceId } of joinGroup) {
-          edges.push({
-            id: `e${sourceId}-${nodeId}`,
-            source: `${sourceId}`,
-            target: targetId,
-            animated: true,
-          });
-        }
-
-        nodeId++;
-        i = nextIndex + 1;
-      } else {
-        i = j;
-      }
-
-      y += 2 * ySpacing;
-      x = 0;
-    } else {
-      nodes.push({
+    for (let j = 0; j < group.length; j++) {
+      const stage = group[j];
+      const node = {
         id: `${nodeId}`,
-        data: { label: `${stage.name}` },
-        position: { x, y },
+        data: { label: stage.name },
+        position: { x: centerX + j * xSpacing, y },
         style: {
           backgroundColor: `${stage.color}`,
           padding: 10,
           borderRadius: 5,
         },
-      });
-
-      if (nodeId > 1) {
-        edges.push({
-          id: `e${nodeId - 1}-${nodeId}`,
-          source: `${nodeId - 1}`,
-          target: `${nodeId}`,
-          animated: true,
-        });
-      }
-
+      };
+      nodes.push(node);
+      currentNodeIds.push(nodeId);
       nodeId++;
-      i++;
-      y += ySpacing;
     }
+
+    stageIdMap.set(stageNum, currentNodeIds);
+
+    // Connect previous stage to this one
+    if (i > 0) {
+      const prevIds = stageIdMap.get(sortedStageNumbers[i - 1])!;
+      for (const sourceId of prevIds) {
+        for (const targetId of currentNodeIds) {
+          edges.push({
+            id: `e${sourceId}-${targetId}`,
+            source: `${sourceId}`,
+            target: `${targetId}`,
+            animated: true,
+          });
+        }
+      }
+    }
+
+    y += ySpacing * 2;
   }
 
   useImperativeHandle(ref, () => ({

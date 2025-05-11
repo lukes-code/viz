@@ -5,47 +5,47 @@ export type FlowRepo = {
 };
 
 export const defaultFlowData: FlowData = {
-  frontend: {
+  "Frontend lifecycle": {
     stages: [
       {
         name: "Local",
-        isJoin: false,
+        stageNumber: 1,
         label: "Environment",
         color: "#FF5733",
       },
       {
         name: "Raise PR",
-        isJoin: false,
+        stageNumber: 2,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "Review PR",
-        isJoin: true,
+        stageNumber: 3,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "Chromatic",
-        isJoin: true,
+        stageNumber: 3,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "CI/CD",
-        isJoin: false,
+        stageNumber: 3,
         label: "Automation",
         color: "#9DFF33",
       },
       {
         name: "Merge PR",
-        isJoin: false,
+        stageNumber: 4,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "Testing",
-        isJoin: false,
+        stageNumber: 5,
         label: "Environment",
         color: "#FF5733",
       },
@@ -53,46 +53,46 @@ export const defaultFlowData: FlowData = {
     description: "A frontend repository", // Add description here
     coreTech: ["React"], // Add core technologies here
   },
-  backend: {
+  "API Deployment": {
     stages: [
       {
         name: "Local",
-        isJoin: false,
+        stageNumber: 1,
         label: "Environment",
         color: "#FF5733",
       },
       {
         name: "Raise PR",
-        isJoin: false,
+        stageNumber: 2,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "Review PR",
-        isJoin: true,
+        stageNumber: 3,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "CI/CD",
-        isJoin: false,
+        stageNumber: 3,
         label: "Automation",
         color: "#9DFF33",
       },
       {
         name: "Merge PR",
-        isJoin: false,
+        stageNumber: 4,
         label: "Manual",
         color: "#3357FF",
       },
       {
         name: "Testing",
-        isJoin: false,
+        stageNumber: 5,
         label: "Environment",
         color: "#FF5733",
       },
     ],
-    description: "A backend repository", // Add description here
+    description: "A flow for API deployment", // Add description here
     coreTech: ["Node.js"], // Add core technologies here
   },
 };

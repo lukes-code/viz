@@ -1,6 +1,6 @@
 export type Stage = {
   name: string;
-  isJoin: boolean;
+  stageNumber: number;
   label: string;
   color: string;
 };

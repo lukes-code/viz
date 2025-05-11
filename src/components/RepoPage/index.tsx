@@ -34,7 +34,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   const [stages, setStages] = useState<Stage[]>(
     repoData.stages.length > 0
       ? repoData.stages
-      : [{ name: "", isJoin: false, label: "", color: "" }]
+      : [{ name: "", stageNumber: 1, label: "", color: "" }]
   );
   const [templateSelect, setTemplateSelect] = useState<string>("");
   const [description, setDescription] = useState(repoData.description);
@@ -71,7 +71,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   };
 
   const handleAddStage = () =>
-    setStages([...stages, { name: "", isJoin: false, label: "", color: "" }]);
+    setStages([...stages, { name: "", stageNumber: 1, label: "", color: "" }]);
 
   const handleRemoveStage = (index: number) => {
     const updated = [...stages];
@@ -142,34 +142,20 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
     setTemplateSelect("");
   };
 
-  const groupStages = (): Stage[][] => {
-    const grouped: Stage[][] = [];
-    let i = 0;
-
-    while (i < stages.length) {
-      const group: Stage[] = [stages[i]];
-
-      if (stages[i].isJoin) {
-        i++;
-        while (i < stages.length) {
-          group.push(stages[i]);
-          if (!stages[i].isJoin) {
-            i++;
-            break;
-          }
-          i++;
-        }
-      } else {
-        i++;
-      }
-
-      grouped.push(group);
+  const groupStagesByNumber = (): { [key: number]: Stage[] } => {
+    const grouped: { [key: number]: Stage[] } = {};
+    for (const stage of stages) {
+      const num = stage.stageNumber || 1;
+      if (!grouped[num]) grouped[num] = [];
+      grouped[num].push(stage);
     }
-
     return grouped;
   };
 
-  const groupedStages = groupStages();
+  const groupedStages = groupStagesByNumber();
+  const sortedStageNumbers = Object.keys(groupedStages)
+    .map(Number)
+    .sort((a, b) => a - b);
 
   return (
     <div className="w-full px-6 py-12 min-h-[100vh] overflow-y-auto">
@@ -186,7 +172,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
             placeholder="Flow name"
           />
 
-          <h3 className="text-xl font-semibold text-purple-400 my-2">
+          <h3 className="text-xl font-semibold text-white my-2">
             Quick start template
           </h3>
           <select
@@ -204,9 +190,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-purple-400 my-2">
-            Core Tech
-          </h3>
+          <h3 className="text-xl font-semibold text-white my-2">Core Tech</h3>
           <select
             value={coreTech}
             onChange={(e) =>
@@ -226,9 +210,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-purple-400 my-2">
-            Description
-          </h3>
+          <h3 className="text-xl font-semibold text-white my-2">Description</h3>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -237,135 +219,110 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
           />
         </div>
 
-        <h3 className="text-xl font-semibold text-purple-400 my-2">Stages</h3>
-        {groupedStages.map((step, stepIndex) => (
-          <div key={stepIndex} className="flex flex-col items-center">
-            <div className="w-full">
-              <div className="p-6 rounded-xl bg-white/5 backdrop-blur border border-white/10 shadow-inner">
-                <h3 className="text-lg font-semibold text-purple-400 mb-4">
-                  Stage {stepIndex + 1}
-                </h3>
+        <div className="flex gap-4 overflow-x-auto py-4 items-start">
+          {sortedStageNumbers.map((stageNum) => (
+            <div
+              key={stageNum}
+              className="min-w-[250px] w-64 border border-dashed border-white/10 rounded-xl p-4 shadow-inner flex-shrink-0"
+            >
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Stage {stageNum}
+              </h3>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  {step.map((stage) => {
-                    const globalIndex = stages.findIndex((s) => s === stage);
+              <div className="flex flex-col gap-4">
+                {groupedStages[stageNum].map((stage, localIndex) => {
+                  const globalIndex = stages.findIndex((s) => s === stage);
+                  return (
+                    <div
+                      key={globalIndex}
+                      className="p-3 bg-gray-800 rounded-lg border border-gray-700 shadow-sm"
+                    >
+                      <input
+                        value={stage.name}
+                        onChange={(e) =>
+                          handleStageChange(globalIndex, "name", e.target.value)
+                        }
+                        className="w-full px-3 py-2 mb-2 rounded bg-gray-900 border border-gray-600 text-white"
+                        placeholder="Stage name"
+                      />
 
-                    return (
-                      <div
-                        key={globalIndex}
-                        className="p-4 bg-gray-800 rounded-lg border border-gray-700 shadow-sm"
+                      <select
+                        value={stage.label}
+                        onChange={(e) => {
+                          const selectedLabel = e.target.value;
+                          const foundEntry = Object.entries(customTypes).find(
+                            ([, val]) => val.label === selectedLabel
+                          );
+
+                          if (foundEntry) {
+                            const [, config] = foundEntry;
+                            updateStageAt(globalIndex, {
+                              label: config.label,
+                              color: config.color,
+                            });
+                          }
+                        }}
+                        className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
                       >
-                        <div className="mb-2">
-                          <input
-                            value={stage.name}
-                            onChange={(e) =>
-                              handleStageChange(
-                                globalIndex,
-                                "name",
-                                e.target.value
-                              )
-                            }
-                            className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
-                            placeholder="Stage name"
-                          />
-                        </div>
+                        <option value="">Select type</option>
+                        {Object.entries(customTypes).map(([key, config]) => (
+                          <option key={key} value={config.label}>
+                            {config.label}
+                          </option>
+                        ))}
+                      </select>
 
-                        <div className="mb-2">
-                          <select
-                            value={stage.label}
-                            onChange={(e) => {
-                              const selectedLabel = e.target.value;
-                              const foundEntry = Object.entries(
-                                customTypes
-                              ).find(([, val]) => val.label === selectedLabel);
+                      <button
+                        onClick={() => handleRemoveStage(globalIndex)}
+                        disabled={stages.length === 1}
+                        title="Delete"
+                        className="text-gray-950 hover:text-red-400 float-right mt-2"
+                      >
+                        <TrashIcon className="w-5 h-5" />
+                      </button>
+                    </div>
+                  );
+                })}
 
-                              if (foundEntry) {
-                                const [, config] = foundEntry;
-                                updateStageAt(globalIndex, {
-                                  label: config.label,
-                                  color: config.color,
-                                });
-                              }
-                            }}
-                            className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white"
-                          >
-                            <option value="">Select type</option>
-                            {Object.entries(customTypes).map(
-                              ([key, config]) => (
-                                <option key={key} value={config.label}>
-                                  {config.label}
-                                </option>
-                              )
-                            )}
-                          </select>
-                        </div>
-
-                        <label className="flex items-center text-sm text-gray-300 mb-2">
-                          <input
-                            type="checkbox"
-                            checked={stage.isJoin}
-                            onChange={(e) =>
-                              handleStageChange(
-                                globalIndex,
-                                "isJoin",
-                                e.target.checked
-                              )
-                            }
-                            className="mr-2"
-                          />
-                          Does this run in parallel to the next item?
-                        </label>
-
-                        <button
-                          onClick={() => handleRemoveStage(globalIndex)}
-                          disabled={stages.length === 1}
-                          title="Delete"
-                          className="text-red-500 hover:text-red-400 cursor-pointer float-right"
-                        >
-                          <TrashIcon className="w-5 h-5" />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
+                <button
+                  onClick={() =>
+                    setStages([
+                      ...stages,
+                      { name: "", stageNumber: stageNum, label: "", color: "" },
+                    ])
+                  }
+                  className="mt-2 text-sm text-white cursor-pointer transition-all hover:bg-white/10 border border-dashed border-white/10 w-full rounded-lg px-4 py-2"
+                >
+                  Add item
+                </button>
               </div>
             </div>
+          ))}
 
-            {/* Connector between groups */}
-            {stepIndex < groupedStages.length - 1 ? (
-              <div className="flex flex-col items-center my-2">
-                <svg
-                  className="w-4 h-12 text-gray-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  {/* Vertical line (longer) */}
-                  <path
-                    d="M12 2v30"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  {/* Downward arrow */}
-                  <path
-                    d="M19 26l-7 7-7-7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            ) : (
-              <div className="text-sm text-gray-400 mt-6">Finish</div>
-            )}
+          <div
+            onClick={() => {
+              const nextStageNumber =
+                Math.max(0, ...stages.map((s) => s.stageNumber || 0)) + 1;
+
+              setStages([
+                ...stages,
+                {
+                  name: "",
+                  stageNumber: nextStageNumber,
+                  label: "",
+                  color: "",
+                },
+              ]);
+            }}
+            className="cursor-pointer transition-all hover:bg-white/10 min-w-[250px] w-64 h-[283px] justify-content flex items-center backdrop-blur border border-dashed border-white/10 rounded-xl p-4 shadow-inner flex-shrink-0"
+          >
+            <button className="w-full text-center cursor-pointer">
+              Add stage
+            </button>
           </div>
-        ))}
+        </div>
 
-        <div className="flex flex-wrap gap-4">
-          <Button onClick={handleAddStage} type={ButtonType.SECONDARY}>
-            ➕ Add Step
-          </Button>
-
+        <div className="flex flex-wrap gap-4 mt-6">
           <Button onClick={handleSave} type={ButtonType.PRIMARY}>
             {isEditMode ? "💾 Save Changes" : "🚀 Create Repo"}
           </Button>

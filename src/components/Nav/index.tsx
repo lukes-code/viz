@@ -6,7 +6,7 @@ const Nav = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-gray-900 text-white backdrop-blur sticky top-0 z-50 shadow-sm border-b border-white/10">
+    <nav className="bg-gray-950 text-white backdrop-blur sticky top-0 z-50 shadow-sm border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <Link to="/" className="text-xl font-bold text-purple-600">
           🧬 Viz
@@ -32,7 +32,7 @@ const Nav = () => {
                 : "bg-white text-gray-900 hover:bg-purple-100"
             }`}
           >
-            + Add types
+            Types
           </Link>
         </div>
       </div>
