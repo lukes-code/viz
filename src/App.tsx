@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { defaultCustomTypes, defaultFlowData } from "./data/flowData";
 import StageVisualiser from "./components/StageVisualiser";
-import FlowPage from "./components/FlowPage";
-import RepoPage from "./components/RepoPage";
 import { FlowData } from "./types";
 import CreateNodeTypePage from "./components/CreateNodeTypesPage";
 import Nav from "./components/Nav";
+import CreateEditFlow from "./components/CreateEditFlow";
+import FlowPage from "./components/FlowPage";
 
 const App = () => {
   const [flowData, setFlowData] = useState<FlowData>(defaultFlowData);
@@ -32,15 +32,15 @@ const App = () => {
               }
             />
             <Route
-              path="/flow/:repo"
+              path="/flow/:flow"
               element={
                 <FlowPage flowData={flowData} customTypes={customTypes} />
               }
             />
             <Route
-              path="/edit/:repo"
+              path="/edit/:flow"
               element={
-                <RepoPage
+                <CreateEditFlow
                   flowData={flowData}
                   setFlowData={setFlowData}
                   customTypes={customTypes}
@@ -50,7 +50,7 @@ const App = () => {
             <Route
               path="/create"
               element={
-                <RepoPage
+                <CreateEditFlow
                   flowData={flowData}
                   setFlowData={setFlowData}
                   customTypes={customTypes}
@@ -67,7 +67,7 @@ const App = () => {
               }
             />
             <Route
-              path="/flow/:repo"
+              path="/flow/:flow"
               element={
                 <FlowPage flowData={flowData} customTypes={customTypes} />
               }

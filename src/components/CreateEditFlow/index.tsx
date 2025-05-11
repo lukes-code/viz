@@ -19,26 +19,26 @@ type Props = {
   customTypes: CustomTypes;
 };
 
-const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
-  const { repo } = useParams<{ repo: string }>();
+const CreateEditFlow = ({ flowData, setFlowData, customTypes }: Props) => {
+  const { flow } = useParams<{ flow: string }>();
   const navigate = useNavigate();
 
-  const isEditMode = repo !== undefined;
-  const repoData = flowData[repo ?? ""] ?? {
+  const isEditMode = flow !== undefined;
+  const newFlowData = flowData[flow ?? ""] ?? {
     stages: [],
     description: "",
     coreTech: [],
   };
 
-  const [repoName, setRepoName] = useState(isEditMode ? repo : "");
+  const [flowName, setFlowName] = useState(isEditMode ? flow : "");
   const [stages, setStages] = useState<Stage[]>(
-    repoData.stages.length > 0
-      ? repoData.stages
+    newFlowData.stages.length > 0
+      ? newFlowData.stages
       : [{ name: "", stageNumber: 1, label: "", color: "" }]
   );
   const [templateSelect, setTemplateSelect] = useState<string>("");
-  const [description, setDescription] = useState(repoData.description);
-  const [coreTech, setCoreTech] = useState<string[]>(repoData.coreTech);
+  const [description, setDescription] = useState(newFlowData.description);
+  const [coreTech, setCoreTech] = useState<string[]>(newFlowData.coreTech);
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -47,12 +47,12 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   });
 
   useEffect(() => {
-    if (isEditMode && repoData.stages) {
-      setStages(repoData.stages);
-      setDescription(repoData.description);
-      setCoreTech(repoData.coreTech);
+    if (isEditMode && newFlowData.stages) {
+      setStages(newFlowData.stages);
+      setDescription(newFlowData.description);
+      setCoreTech(newFlowData.coreTech);
     }
-  }, [isEditMode, repoData]);
+  }, [isEditMode, newFlowData]);
 
   const updateStageAt = (index: number, changes: Partial<Stage>) => {
     setStages((prev) => {
@@ -80,19 +80,19 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   };
 
   const handleSave = () => {
-    if (!repoName.trim()) {
+    if (!flowName.trim()) {
       setModal({
         isOpen: true,
-        message: "Repo name is required",
+        message: "Flow name is required",
         onConfirm: () => setModal((prev) => ({ ...prev, isOpen: false })),
       });
       return;
     }
 
-    if (isEditMode && repoName !== repo && flowData[repoName]) {
+    if (isEditMode && flowName !== flow && flowData[flowName]) {
       setModal({
         isOpen: true,
-        message: "A repo with that name already exists.",
+        message: "A flow with that name already exists.",
         onConfirm: () => setModal((prev) => ({ ...prev, isOpen: false })),
       });
       return;
@@ -100,10 +100,10 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
 
     const updatedFlowData = { ...flowData };
     if (isEditMode) {
-      delete updatedFlowData[repo ?? ""];
+      delete updatedFlowData[flow ?? ""];
     }
 
-    updatedFlowData[repoName] = {
+    updatedFlowData[flowName] = {
       stages: stages.filter((s) => s.name.trim()),
       description: description.trim(),
       coreTech,
@@ -162,12 +162,12 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
       <div className="mb-8 max-w-7xl mx-auto">
         <div className="mb-8">
           <h2 className="text-3xl font-extrabold tracking-tight mb-2">
-            {isEditMode ? `Edit flow: ${repo}` : "Create flow"}
+            {isEditMode ? `Edit flow: ${flow}` : "Create flow"}
           </h2>
 
           <input
-            value={repoName}
-            onChange={(e) => setRepoName(e.target.value)}
+            value={flowName}
+            onChange={(e) => setFlowName(e.target.value)}
             className="w-full mb-4 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="Flow name"
           />
@@ -215,7 +215,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600"
-            placeholder="Repo description"
+            placeholder="Flow description"
           />
         </div>
 
@@ -324,7 +324,7 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
 
         <div className="flex flex-wrap gap-4 mt-6">
           <Button onClick={handleSave} type={ButtonType.PRIMARY}>
-            {isEditMode ? "💾 Save Changes" : "🚀 Create Repo"}
+            {isEditMode ? "💾 Save Changes" : "🚀 Create"}
           </Button>
         </div>
       </div>
@@ -339,4 +339,4 @@ const RepoPage = ({ flowData, setFlowData, customTypes }: Props) => {
   );
 };
 
-export default RepoPage;
+export default CreateEditFlow;

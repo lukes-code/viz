@@ -17,24 +17,24 @@ type Props = {
 
 const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [repoToDelete, setRepoToDelete] = useState<string | null>(null);
+  const [flowToDelete, setFlowToDelete] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleDeleteRepo = (repoName: string) => {
-    setRepoToDelete(repoName);
+  const handleDeleteFlow = (flowName: string) => {
+    setFlowToDelete(flowName);
     setShowDeleteModal(true);
   };
 
-  const confirmDeleteRepo = () => {
-    if (repoToDelete) {
+  const confirmDeleteFlow = () => {
+    if (flowToDelete) {
       const updatedFlowData = { ...flowData };
-      delete updatedFlowData[repoToDelete];
+      delete updatedFlowData[flowToDelete];
       setFlowData(updatedFlowData);
     }
     setShowDeleteModal(false);
   };
 
-  const cancelDeleteRepo = () => {
+  const cancelDeleteFlow = () => {
     setShowDeleteModal(false);
   };
 
@@ -47,28 +47,28 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {Object.keys(flowData).map((repo) => (
+          {Object.keys(flowData).map((flow) => (
             <Card
-              key={repo}
-              title={repo}
+              key={flow}
+              title={flow}
               actions={
                 <>
                   <button
-                    onClick={() => navigate(`/edit/${repo}`)}
+                    onClick={() => navigate(`/edit/${flow}`)}
                     className="text-white hover:text-gray-300 cursor-pointer"
                     title="Edit"
                   >
                     <Pencil1Icon className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => navigate(`/flow/${repo}`)}
+                    onClick={() => navigate(`/flow/${flow}`)}
                     className="text-blue-400 hover:text-blue-300 cursor-pointer"
                     title="View"
                   >
                     <ExternalLinkIcon className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => handleDeleteRepo(repo)}
+                    onClick={() => handleDeleteFlow(flow)}
                     title="Delete"
                     className="text-gray-400 hover:text-red-400 absolute bottom-6 right-8 cursor-pointer"
                   >
@@ -80,16 +80,16 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
               {/* Pills */}
               <div className="flex flex-wrap gap-2 mt-2">
                 <span className="bg-blue-600 text-white py-1 px-3 rounded-full text-xs">
-                  {flowData[repo].coreTech}
+                  {flowData[flow].coreTech}
                 </span>
                 <span className="bg-gray-700 text-white py-1 px-3 rounded-full text-xs">
-                  {flowData[repo].stages.length} steps
+                  {flowData[flow].stages.length} steps
                 </span>
               </div>
 
               {/* Description */}
               <div className="text-sm text-white mt-2 truncate max-w-[85%]">
-                {flowData[repo].description || "No description"}
+                {flowData[flow].description || "No description"}
               </div>
             </Card>
           ))}
@@ -136,8 +136,8 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
       <ConfirmModal
         isOpen={showDeleteModal}
         title="Are you sure you want to delete this flow?"
-        onCancel={cancelDeleteRepo}
-        onConfirm={confirmDeleteRepo}
+        onCancel={cancelDeleteFlow}
+        onConfirm={confirmDeleteFlow}
       />
     </div>
   );

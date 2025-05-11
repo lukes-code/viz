@@ -1,6 +1,6 @@
 import { FlowData, Stage } from "../types";
 
-export type FlowRepo = {
+export type FlowFlow = {
   stages: Stage[];
 };
 
@@ -50,7 +50,7 @@ export const defaultFlowData: FlowData = {
         color: "#FF5733",
       },
     ],
-    description: "A frontend repository", // Add description here
+    description: "A frontend flowsitory", // Add description here
     coreTech: ["React"], // Add core technologies here
   },
   "API Deployment": {

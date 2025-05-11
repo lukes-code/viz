@@ -5,12 +5,12 @@ export type Stage = {
   color: string;
 };
 
-export type FlowRepo = {
+export type FlowFlow = {
   stages: Stage[];
 };
 
 export type FlowCanvasProps = {
-  repo: string;
+  flow: string;
   stages: Stage[];
 };
 

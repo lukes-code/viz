@@ -11,10 +11,10 @@ type FlowPageProps = {
 };
 
 const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
-  const { repo } = useParams<{ repo: string }>();
+  const { flow } = useParams<{ flow: string }>();
   const canvasRef = useRef<any>(null);
 
-  if (!repo || !flowData[repo]) {
+  if (!flow || !flowData[flow]) {
     return (
       <div className="max-w-xl mx-auto bg-white p-6 rounded shadow text-center">
         <h2 className="text-xl font-bold text-red-600 mb-4">Flow not found!</h2>
@@ -25,7 +25,7 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
     );
   }
 
-  const stages = flowData[repo].stages;
+  const stages = flowData[flow].stages;
 
   const handleExport = (type: "json" | "image") => {
     if (!canvasRef.current) return;
@@ -36,7 +36,7 @@ const FlowPage = ({ flowData, customTypes }: FlowPageProps) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">{repo} flow</h2>
+        <h2 className="text-2xl font-bold">{flow} flow</h2>
       </div>
 
       {/* Legend */}
