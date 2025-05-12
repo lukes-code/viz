@@ -4,6 +4,7 @@ import { colorPalette } from "../../constants";
 import Button from "../Button";
 import { ButtonType } from "../../types";
 import { classNames } from "../../utils";
+import Card from "../Card";
 
 type CustomType = {
   label: string;
@@ -137,77 +138,70 @@ const CreateNodeTypePage = ({ customTypes, setCustomTypes }: Props) => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-        {Object.entries(customTypes).map(([key, type]) => (
-          <div
-            key={key}
-            className={classNames(
-              editModeKeys.has(key)
-                ? "border border-dashed border-white/10"
-                : "border border-white/10",
-              "bg-white/5 rounded-xl p-4 space-y-3"
-            )}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {editModeKeys.has(key) ? (
-                  <input
-                    value={type.label}
-                    onChange={(e) =>
-                      handleEditType(key, { label: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded border border-gray-500 bg-gray-700 text-white"
-                  />
-                ) : (
-                  <>
-                    <span
-                      style={{ backgroundColor: type.color }}
-                      className="w-4 h-4 rounded-full"
-                    />
-                    <span className="text-sm text-white">{type.label}</span>
-                  </>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                {editModeKeys.has(key) ? (
-                  <button
-                    onClick={() => toggleEditMode(key)}
-                    className="text-gray-400 hover:text-blue-400 cursor-pointer"
-                  >
-                    <FilePlusIcon className="w-5 h-5" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => toggleEditMode(key)}
-                    className="text-gray-400 hover:text-blue-400 cursor-pointer"
-                  >
-                    <Pencil1Icon className="w-5 h-5" />
-                  </button>
-                )}
-                <button
-                  onClick={() => handleRemoveType(key)}
-                  className="text-gray-400 hover:text-red-400 cursor-pointer"
-                >
-                  <TrashIcon className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
+        {Object.entries(customTypes).map(([key, type]) => {
+          const isEditing = editModeKeys.has(key);
 
-            {editModeKeys.has(key) && (
-              <div className="flex gap-2 flex-wrap border border-dashed border-white/20 rounded-lg p-3">
-                {colorPalette.map((color) => (
-                  <button
-                    key={color}
-                    style={{ backgroundColor: color }}
-                    className={`w-6 h-6 rounded-full cursor-pointer ${
-                      type.color === color ? "ring-2 ring-white" : ""
-                    }`}
-                    onClick={() => handleEditType(key, { color })}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+          const title = isEditing ? (
+            <input
+              value={type.label}
+              onChange={(e) => handleEditType(key, { label: e.target.value })}
+              className="w-full px-3 py-2 rounded border border-gray-500 bg-gray-700 text-white"
+            />
+          ) : (
+            <div className="flex items-center gap-2">
+              <span
+                style={{ backgroundColor: type.color }}
+                className="w-4 h-4 rounded-full"
+              />
+              <span className="text-sm text-white">{type.label}</span>
+            </div>
+          );
+
+          const actions = (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => toggleEditMode(key)}
+                className="text-gray-400 hover:text-blue-400 cursor-pointer"
+              >
+                {isEditing ? (
+                  <FilePlusIcon className="w-5 h-5" />
+                ) : (
+                  <Pencil1Icon className="w-5 h-5" />
+                )}
+              </button>
+              <button
+                onClick={() => handleRemoveType(key)}
+                className="text-gray-400 hover:text-red-400 cursor-pointer"
+              >
+                <TrashIcon className="w-5 h-5" />
+              </button>
+            </div>
+          );
+
+          return (
+            <Card
+              key={key}
+              title={title}
+              actions={actions}
+              isEditing={isEditing}
+            >
+              {isEditing && (
+                <div className="flex gap-2 flex-wrap border border-dashed border-white/20 rounded-lg p-3">
+                  {colorPalette.map((color) => (
+                    <button
+                      key={color}
+                      style={{ backgroundColor: color }}
+                      className={`w-6 h-6 rounded-full cursor-pointer ${
+                        type.color === color ? "ring-2 ring-white" : ""
+                      }`}
+                      onClick={() => handleEditType(key, { color })}
+                    />
+                  ))}
+                </div>
+              )}
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

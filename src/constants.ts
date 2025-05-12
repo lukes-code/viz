@@ -2,25 +2,21 @@ import { Stage } from "./types";
 
 export const colorPalette = [
   "#FF5733",
-  "#33FF57",
   "#3357FF",
   "#FF33A6",
   "#FF8C33",
   "#33FFEC",
-  "#8C33FF",
   "#FF3380",
   "#33FF80",
   "#F3FF33",
   "#F833FF",
   "#33FF57",
-  "#FF5733",
   "#8C33FF",
   "#FF4D00",
   "#9DFF33",
   "#FF4500",
   "#F5FF33",
   "#A33FFF",
-  "#FF5733",
 ];
 
 export const coreTechList = [
@@ -113,7 +109,7 @@ export const coreTechList = [
 export const flowTemplates: Record<string, Stage[]> = {
   "Basic CI Flow": [
     { name: "Local", label: "Environment", color: "#FF5733", stageNumber: 1 },
-    { name: "Raise PR", label: "Manual", color: "#3357FF", stageNumber: 2 },
+    { name: "Raise PR", label: "Manual", color: "#F5FF33", stageNumber: 2 },
     { name: "CI/CD", label: "Automation", color: "#9DFF33", stageNumber: 3 },
     {
       name: "Review PR",
@@ -121,14 +117,14 @@ export const flowTemplates: Record<string, Stage[]> = {
       color: "#9DFF33",
       stageNumber: 4,
     },
-    { name: "Merge PR", label: "Manual", color: "#3357FF", stageNumber: 5 },
+    { name: "Merge PR", label: "Manual", color: "#F5FF33", stageNumber: 5 },
     { name: "Deploy", label: "Automation", color: "#9DFF33", stageNumber: 6 },
   ],
   "Review Flow": [
-    { name: "Raise PR", label: "manual", color: "#3357FF", stageNumber: 1 },
-    { name: "Review PR", label: "manual", color: "#3357FF", stageNumber: 2 },
-    { name: "Chromatic", label: "manual", color: "#3357FF", stageNumber: 3 },
+    { name: "Raise PR", label: "Manual", color: "#F5FF33", stageNumber: 1 },
+    { name: "Review PR", label: "Manual", color: "#F5FF33", stageNumber: 2 },
+    { name: "Chromatic", label: "Manual", color: "#F5FF33", stageNumber: 3 },
     { name: "CI", label: "Automation", color: "#9DFF33", stageNumber: 3 },
-    { name: "Merge PR", label: "Manual", color: "#3357FF", stageNumber: 4 },
+    { name: "Merge PR", label: "Manual", color: "#F5FF33", stageNumber: 4 },
   ],
 };

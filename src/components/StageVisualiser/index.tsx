@@ -107,26 +107,29 @@ const StageVisualiser = ({ flowData, setFlowData, customTypes }: Props) => {
           <h2 className="text-3xl font-extrabold tracking-tight">Node types</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 items-start">
           {Object.keys(customTypes).map((type) => {
             const nodeType = customTypes[type];
             return (
-              <Card key={type} title={nodeType.label} actions={null}>
-                {/* Color Pill */}
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <span
-                    style={{ backgroundColor: nodeType.color }}
-                    className="w-4 h-4 rounded-full"
-                  />
-                  <span className="text-sm text-white">{nodeType.label}</span>
-                </div>
-              </Card>
+              <Card
+                key={type}
+                title={
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <span
+                      style={{ backgroundColor: nodeType.color }}
+                      className="w-4 h-4 rounded-full"
+                    />
+                    <span className="text-sm text-white">{nodeType.label}</span>
+                  </div>
+                }
+                actions={null}
+              />
             );
           })}
 
           <button
             onClick={() => navigate("/create-node-types")}
-            className="cursor-pointer p-6 min-h-[122px] rounded-xl bg-white/5 backdrop-blur border border-dashed border-white/10 shadow-inner flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+            className="cursor-pointer py-4 px-6 h-full max-h-[54px] rounded-xl bg-white/5 backdrop-blur border border-dashed border-white/10 shadow-inner flex items-center justify-center text-white hover:bg-white/10 transition-colors"
           >
             <span className="text-lg font-semibold">+ Add type</span>
           </button>
